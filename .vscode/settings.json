@@ -1,0 +1,6 @@
+{
+    "sonarlint.connectedMode.project": {
+        "connectionId": "drt2009",
+        "projectKey": "drt2009_todo-next-app"
+    }
+}
