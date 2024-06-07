@@ -9,15 +9,49 @@ type AddItemButtonProps = {
 
 function AddItemButton({ createTypeName }: Readonly<AddItemButtonProps>) {
 
-    const ref = useRef(null);
+    const modalRef = useRef<HTMLDialogElement>(null);
+    const formRef = useRef<HTMLFormElement>(null)
 
     const handleOpen = () => {
-        ref.current.showModal();
+        if (modalRef.current) {
+            modalRef.current.showModal();
+        }
     };
 
-    const handleClose = () => {
-        ref.current.close();
+    const handleClose = (event: React.FormEvent) => {
+        event.preventDefault();
+        if (modalRef.current) {
+            modalRef.current.close();
+        }
     };
+
+    const handleSubmit = (event: React.FormEvent) => {
+
+        event.preventDefault();
+
+        const postData = new FormData();
+        postData.append('description', event.target.todoDescription.value);
+
+        fetch('http://localhost:8080/todo', {
+            method: 'POST',
+            body: postData,
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                // Handle the response data
+            })
+            .catch((error) => {
+                // Handle any errors
+            });
+
+        if (modalRef.current) {
+            modalRef.current.close();
+        }
+
+        if (formRef.current) {
+            formRef.current.reset();
+        }
+    }
 
 
     return (
@@ -28,21 +62,19 @@ function AddItemButton({ createTypeName }: Readonly<AddItemButtonProps>) {
                 onClick={handleOpen}>
                 <span className="text-2xl">+</span>
             </button >
-            <dialog ref={ref} id="createItemModal" className="modal modal-bottom sm:modal-middle">
+            <dialog ref={modalRef} id="createItemModal" className="modal modal-bottom sm:modal-middle">
                 <div className="modal-box">
                     <h3 className="font-bold text-lg">Create New {createTypeName}</h3>
-                    <label className="form-control w-full max-w-xs">
-                        <div className="label">
-                            <span className="label-text">What do you need to do?</span>
-                        </div>
-                        <input type="text" placeholder="Type here" className="input input-bordered w-full max-w-xs" />
-                    </label>
-                    <div className="modal-action">
-                        <form method="dialog">
-                            {/* if there is a button in form, it will close the modal */}
-                            <button className="btn">Close</button>
-                        </form>
-                    </div>
+                    <form onSubmit={handleSubmit} ref={formRef}>
+                        <label className="form-control w-full max-w-xs">
+                            <div className="label">
+                                <span className="label-text">What do you need to do?</span>
+                            </div>
+                            <input type="text" name="todoDescription" placeholder="Type here" className="input input-bordered w-full max-w-xs" />
+                        </label>
+                        <button className="btn" type="submit">Submit</button>
+                        <button className="btn" onClick={handleClose}>Close</button>
+                    </form>
                 </div>
             </dialog>
         </>
