@@ -1,59 +1,17 @@
-'use client'
-import React, { useRef } from 'react';
+import React from 'react';
 
 export default AddItemButton
 
 type AddItemButtonProps = {
     createTypeName: string;
+    handleOpen: FunctionName;
+    handleClose: FunctionName;
+    handleSubmit: FunctionName;
+    modalRef: RefObject<HTMLDialogElement>;
+    formRef: RefObject<HTMLFormElement>;
 }
 
-function AddItemButton({ createTypeName }: Readonly<AddItemButtonProps>) {
-
-    const modalRef = useRef<HTMLDialogElement>(null);
-    const formRef = useRef<HTMLFormElement>(null)
-
-    const handleOpen = () => {
-        if (modalRef.current) {
-            modalRef.current.showModal();
-        }
-    };
-
-    const handleClose = (event: React.FormEvent) => {
-        event.preventDefault();
-        if (modalRef.current) {
-            modalRef.current.close();
-        }
-    };
-
-    const handleSubmit = (event: React.FormEvent) => {
-
-        event.preventDefault();
-
-        const postData = new FormData();
-        postData.append('description', event.target.todoDescription.value);
-
-        fetch('http://localhost:8080/todo', {
-            method: 'POST',
-            body: postData,
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                // Handle the response data
-            })
-            .catch((error) => {
-                // Handle any errors
-            });
-
-        if (modalRef.current) {
-            modalRef.current.close();
-        }
-
-        if (formRef.current) {
-            formRef.current.reset();
-        }
-    }
-
-
+function AddItemButton({ createTypeName, handleOpen, handleClose, handleSubmit, modalRef, formRef }: Readonly<AddItemButtonProps>) {
     return (
         <>
             <button className="btn btn-circle rounded-full w-12 h-12 flex items-center justify-center"
