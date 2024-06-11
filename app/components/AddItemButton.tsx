@@ -73,7 +73,7 @@ function AddItemButton({ createTypeName }: Readonly<AddItemButtonProps>) {
                             <input type="text" name="todoDescription" placeholder="Type here" className="input input-bordered w-full max-w-xs" />
                         </label>
                         <button className="btn" type="submit">Submit</button>
-                        <button className="btn" onClick={handleClose}>Close</button>
+                        <button className="btn m-2" onClick={handleClose}>Close</button>
                     </form>
                 </div>
             </dialog>
