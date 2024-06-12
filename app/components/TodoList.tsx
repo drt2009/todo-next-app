@@ -60,6 +60,20 @@ function TodoList() {
     };
 
 
+    const handleTodoCardButtonPress = (id: number, status: boolean) => {
+        fetch(`http://localhost:8080/todo/${id}/status/${status}`, {
+            method: 'PATCH'
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                mutate();
+            })
+            .catch((error) => {
+                // Handle any errors
+            });
+    };
+
+
 
     if (error) return <div>Failed to load</div>
     if (!data) return <div>Loading...</div>
@@ -67,7 +81,7 @@ function TodoList() {
     return (
         <>
             {data.map((todoItem) => (
-                <Card key={todoItem.id} description={todoItem.description} id={todoItem.id}></Card>
+                <Card key={todoItem.id} description={todoItem.description} id={todoItem.id} complete={todoItem.complete} buttonClickOption={handleTodoCardButtonPress}></Card>
             ))}
             < AddItemButton
                 createTypeName="Todo Item"
